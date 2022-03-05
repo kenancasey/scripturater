@@ -133,7 +133,7 @@ router.get( '/words/:wordId/ratings/:id', (req, res)=> {
 /* add a new rating object for the given word 
     {"rating" : "like"}
 */
-router.post("/words/:id/ratings", function (req, res, next) {
+router.post("/words/:id/ratings", function (req, res) {
   const wordId = parseInt(req.params.id);
   const word = words[wordId];
   const rating = req.body.rating;
@@ -143,6 +143,8 @@ router.post("/words/:id/ratings", function (req, res, next) {
   ratings.push({ id: ratingId, wordId, word, rating });
 
   res.send({ id: ratingId, wordId, word, rating });
+
+
 });
 
 
@@ -152,6 +154,20 @@ router.post("/words/:id/ratings", function (req, res, next) {
     BODY: {"rating" : "like"}
 */
 router.put( '/words/:wordId/ratings/:ratingId', (req, res)=> {
+  const wordId = parseInt(req.params.wordId);
+  const word = words[wordId];
+  const newRating = req.body.rating;
+  const ratingId = req.params.ratingId;
+
+  let rating = ratings.find( r => r.id === ratingId );
+
+  if(rating){
+    rating.rating = newRating;
+    res.send(rating);
+  }
+  else {
+    res.status(404).send("No rating with that id");
+  }
   
 });
 
@@ -160,8 +176,24 @@ router.put( '/words/:wordId/ratings/:ratingId', (req, res)=> {
 /* DELETE /api/words/5/ratings/1080c5b7-c3c0-4984-9e59-720101719fe2 */
 /* delete an existing rating object for a given word
 */
+
 router.delete( '/words/:wordId/ratings/:ratingId', (req, res)=> {
-  
+
+
+  const wordId = parseInt(req.params.wordId);
+  const word = words[wordId];
+  const newRating = req.body.rating;
+  const ratingId = req.params.ratingId;
+
+  let rating = ratings.find( r => r.id === ratingId );
+
+  if(rating){
+    ratings = ratings.filter( r => r.id !== ratingId ); //creates new array without the deleted rating
+    res.send(rating);
+  }
+  else {
+    res.status(404).send("No rating with that id");
+  }
 });
 
 module.exports = router;
