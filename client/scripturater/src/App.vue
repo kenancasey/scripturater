@@ -19,7 +19,7 @@ export default {
       const word = await result.json();
 
 
-
+      console.log(this)
       this.numberWordsRated++;
       //alert(word.word);
 
@@ -27,15 +27,24 @@ export default {
     },
 
     async submitRating(wordId, rating) {
+
       const result = await fetch(`http://localhost:3000/api/words/${wordId}/ratings`, 
+
       {
         method:"post", 
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify( {rating: rating} )
+
+
       });
-      
+
+      this.loadNewWord()
+    },
+
+    async renderWords() {
+
     }
   },
   mounted() {
@@ -45,6 +54,8 @@ export default {
 
 </script>
 
+
+
 <template>
 
   <h1>Scripturater</h1>
@@ -53,15 +64,47 @@ export default {
 
   <h3>{{numberWordsRated}}</h3>
 
-  <a href="" @click="submitRating(word.id, 'like')">🙁</a>
-  <a href="" @click="submitRating(word.id, 'neutral')">😐</a>
-  <a href="" @click="submitRating(word.id, 'dislike')">🙂</a>
+  <button id = "like-btn"  class = "rate-btn"  @click="submitRating(word.id, 'like')">🙁</button>
+  <button id = "nuetral-btn" class = "rate-btn" @click="submitRating(word.id, 'neutral')">😐</button>
+  <button id = "dislike-btn" class = "rate-btn" @click="submitRating(word.id, 'dislike')">🙂</button>
 
   <br>
 
-  <button @click="loadNewWord()">Get Another Word</button>
+  <button id = "gaw-btn" @click="loadNewWord()">Get Another Word</button>
+
+
+  <br>
+
+
+<div class = "container"> 
+
+  <div class = "words" id = "liked-words"> 
+
+      <h4>Liked words</h4>
+
+    </div>
+
+
+    <div  class = "words" id = "nuetral-words"> 
+
+      <h4>Nuetral words</h4>
+
+    </div>
+
+    <div class = "words" id = "disliked-words"> 
+
+      <h4>Disliked words</h4>
+
+    </div>
+
+</div>
+  
+
+
 
 </template>
+
+
 
 <style>
 
@@ -96,15 +139,17 @@ h2 {
   color: #2c3e50;
 }
 
-a {
-  font-size: 8em;
-  text-decoration: none;
-}
-
-
-button {
+#gaw-btn {
   background-color: white;
   font-size: 1.2em;
 }
+
+.rate-btn {
+  font-size: 8em;
+  text-decoration: none;
+  border: none;
+  background-color: none;
+}
+
 
 </style>
